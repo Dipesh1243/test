@@ -52,6 +52,8 @@ public class WordCount {
       
        context.write(key, new IntWritable(wordCount));
     }
+    }
+	    
   }
 
   public static void main(String[] args) throws Exception {
