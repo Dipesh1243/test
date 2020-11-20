@@ -55,7 +55,7 @@ public class WordCount {
      }
       }
        context.write(key, new Text(anagram));
-    }
+    
   }
 
   public static void main(String[] args) throws Exception {
