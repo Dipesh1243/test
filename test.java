@@ -13,9 +13,9 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class WordCount {
+public class test {
 
-static Array<Text> anagrams = new HashSet<Text>();
+static Collection<Text> anagrams = new HashSet<Text>();
 
 public static class WCMapper extends 
 			Mapper<Object, Text, Text, Text>{
@@ -68,7 +68,7 @@ public static class WCReducer extends
  public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "word count");
-    job.setJarByClass(WordCount.class);
+    job.setJarByClass(test.class);
     job.setMapperClass(WCMapper.class);
     job.setReducerClass(WCReducer.class);
     job.setOutputKeyClass(Text.class);
