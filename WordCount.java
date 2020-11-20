@@ -18,21 +18,20 @@ public class WordCount {
 
   public static class WCMapper
        extends Mapper<Object, Text, Text, Text>{
-       
-private Text sortedText = new Text();
-        private Text originalText = new Text();
+
     public void map(Object key, Text value, Context context) 
     
     throws IOException, InterruptedException {
     
-      String word = value.toString();
-      char[] wordChar = word.toCharArray();
-      Arrays.sort(wordChar);
-		String sortedWord = new String(wordChar);
-		sortedText.set(sortedWord);
-            originalText.set(word);
-            context.write(sortedText, originalText);
-            
+      StringTokenizer itr = new StringTokenizer(value.toString());
+
+      while (itr.hasMoreTokens()) {
+	 String word = itr.nextToken();
+                char[] arr = word.toCharArray();
+                Arrays.sort(arr);
+                String wordKey = new String(arr);
+                context.write(new Text(wordKey), new Text(word));
+      }
     }
   }
 
@@ -40,19 +39,18 @@ private Text sortedText = new Text();
   
        extends Reducer<Text,Text,Text,Text> {
               
-    public void reduce(Text key, Iterable<Text> values, Context context)
+    public void reduce(Text key, Iterable<IntWritable> values, Context context)
      throws IOException, InterruptedException {
      
-      String anagram = null;
+      int wordCount = 0;
       
  for (Text val : values) {
-     if (anagram == null){
-      anagram = val.toString();
-     } else {
-             anagram = anagram + ',' + val.toString();
-     }
-      }
-       context.write(key, new Text(anagram));
+     while (values.hasNext()){
+      IntWritable value = values.next();
+      wordCount += value.get();
+     } 
+      
+       context.write(key, new IntWritable(wordCount));
     }
   }
 
@@ -63,7 +61,7 @@ private Text sortedText = new Text();
     job.setMapperClass(WCMapper.class);
     job.setReducerClass(WCReducer.class);
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(Text.class);
+    job.setOutputValueClass(IntWritable.class);
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
     System.exit(job.waitForCompletion(true) ? 0 : 1);
