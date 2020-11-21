@@ -17,7 +17,7 @@ public class WordCount {
 	
   public static class WCMapper
        extends Mapper<Object, Text, Text, Text>{
-
+ public void map(Object key, Text value, Context context) 
     
 
     throws IOException, InterruptedException {
