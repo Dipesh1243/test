@@ -15,16 +15,15 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
 	
-  public static class WCMapper
-       extends Mapper<Object, Text, Text, Text>{
-
-    public void map(Object key, Text value, Context context) 
-    
-    throws IOException, InterruptedException {
+  public static class WCMapper extends Mapper<Object, Text, Text, Text>{
+       
+	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
     
       StringTokenizer itr = new StringTokenizer(value.toString());
 
-      while (itr.hasMoreTokens()) {
+
+
+      if (itr.countTokens()>=2) {
 	  String word = itr.nextToken().replaceAll("\\W", "");
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
@@ -34,12 +33,10 @@ public class WordCount {
     }
   }
 
-  public static class WCReducer
-  
-       extends Reducer<Text,Text,Text,Text> {
+
+  public static class WCReducer extends Reducer<Text,Text,Text,Text> {
               
-    public void reduce(Text key, Iterable<Text> values, Context context)
-     throws IOException, InterruptedException {
+    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
       String anagram = null;
       
@@ -48,13 +45,12 @@ public class WordCount {
       anagram = val.toString().replaceAll("\\W", "");
      } else {
              anagram = anagram + ',' + val.toString();
-             
-             Set<Integer> set = new HashSet<Integer>(anagram);  
      }
       }
        context.write(key, new Text(anagram));
     }
   }
+
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
