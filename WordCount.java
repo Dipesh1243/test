@@ -36,20 +36,20 @@ public class WordCount {
               
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
-      String anagram = "";
-      
+      String anagram = null;
+    StringTokenizer token = new StringTokenizer(values.toString);
+    
  for (Text val : values) {
-     if (anagram.equals("")){
+     if (anagram == (null) & token.countTokens()>=2){
       anagram = val.toString().replaceAll("\\W", "");
      } else {
              anagram = anagram + ',' + val.toString();
      }
       }
-      StringTokenizer token = new StringTokenizer();
+    
       
-      if(token.countTokens()>=2){
       context.write(key, new Text(anagram));
-      }
+      
     }
   }
 
