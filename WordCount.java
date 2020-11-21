@@ -17,22 +17,26 @@ public class WordCount {
 	
   public static class WCMapper
        extends Mapper<Object, Text, Text, Text>{
- public void map(Object key, Text value, Context context) 
-    
 
+
+		Text originalWord= new Text();
+		Text sortedWord= new Text();
+		
+    public void map(Object key, Text value, Context context) 
+    
     throws IOException, InterruptedException {
-    
-      StringTokenizer token = new StringTokenizer(value.toString());
+     
+     	String word = value.toString().replaceAll("\\W", "");
+		char [] charArray=word.toCharArray();
+		Arrays.sort(charArray);
+	
+		String s= new String(charArray);
 
-      while (token.hasMoreTokens()) {
-      
-	 			String word = token.nextToken().replaceAll("\\W", "");
-                char[] arr = word.toCharArray();
-                Arrays.sort(arr);
-                String wordKey = new String(arr);
-                context.write(new Text(wordKey),word);
-      }
-    }
+		originalWord.set(word);
+		sortedWord.set(s);
+		context.write(sortedWord,originalWord);
+     
+        }
   }
 
   public static class WCReducer
@@ -42,12 +46,16 @@ public class WordCount {
     public void reduce(Text key, Iterable<Text> values, Context context)
      throws IOException, InterruptedException {
      
-     List<String> list = new ArrayList<String>();
-     while(values.hasNext()){
-                list.add(values.next());
-            }
-       context.write(key, list);
-     
+      String anagram = null;
+      
+ for (Text val : values) {
+     if (anagram == null){
+      anagram = val.toString().replaceAll("\\W", "");
+     } else {
+             anagram = anagram + ',' + val.toString();
+     }
+      }
+       context.write(key, new Text(anagram));
     }
   }
 
