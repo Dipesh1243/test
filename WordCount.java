@@ -40,7 +40,7 @@ public class WordCount {
     StringTokenizer token = new StringTokenizer(values.toString);
     
  for (Text val : values) {
-     if (anagram == (null) & token.countTokens()>=2){
+     if (anagram == null & token.countTokens()>=2){
       anagram = val.toString().replaceAll("\\W", "");
      } else {
              anagram = anagram + ',' + val.toString();
