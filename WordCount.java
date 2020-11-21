@@ -21,9 +21,7 @@ public class WordCount {
     
       StringTokenizer itr = new StringTokenizer(value.toString());
 
-
-
-      if (itr.countTokens()>=2) {
+      while (itr.hasMoreTokens()) {
 	  String word = itr.nextToken().replaceAll("\\W", "");
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
@@ -38,16 +36,20 @@ public class WordCount {
               
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
-      String anagram = null;
+      String anagram = "";
       
  for (Text val : values) {
-     if (anagram == null){
+     if (anagram.equals("")){
       anagram = val.toString().replaceAll("\\W", "");
      } else {
              anagram = anagram + ',' + val.toString();
      }
       }
-       context.write(key, new Text(anagram));
+      StringTokenizer token = new StringTokenizer();
+      
+      if(token.countTokens()>=2){
+      context.write(key, new Text(anagram));
+      }
     }
   }
 
