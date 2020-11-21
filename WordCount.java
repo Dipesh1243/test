@@ -46,7 +46,7 @@ StringTokenizer token=new StringTokenizer(anagram,”~”);
 
 		if(token.countTokens()>=2){
 
-		anagram=anagram.replace(“~”, “,”);
+		anagram=anagram.replace("~", “,”);
 		valuesList.set(anagram);
 		context.write(key, valuesList);
 }
