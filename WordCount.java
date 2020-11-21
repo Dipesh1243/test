@@ -24,11 +24,11 @@ public class WordCount {
     
     throws IOException, InterruptedException {
     
-   	  String word = value.toLowerCase().toString().replaceAll("\\W", "");
+   	  String word = value.toString().replaceAll("\\W", "");
       char[] arr = word.toCharArray();
       Arrays.sort(arr);
       String sortedWord = new String(arr);
-      output.collect(sortedWord, word);
+      context.write(sortedWord, word);
 
       
     }
