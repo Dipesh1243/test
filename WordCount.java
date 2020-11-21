@@ -32,25 +32,26 @@ public class WordCount {
   }
 
   public static class WCReducer extends Reducer<Text,Text,Text,Text> {
-              
+	
+	Text valuesList= new Text();
+	
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
-      String anagram = "";
+     String anagram = " ";
       
  for (Text val : values) {
- 	anagram=anagram+val.tostring() + "~";
+ 	 anagram = anagram + val.toString() + '~';
  	 
+     }
+     
+     StringTokenizer token = new StringTokenizer(anagram, "~");
+     
+     if(token.countTokens()>=2){
+     anagram = anagram.replace('~',",");
+     valuesList.set(anagram);
+     context.write(key,anagram);
       }
-
-StringTokenizer token=new StringTokenizer(anagram,”~”);
-
-		if(token.countTokens()>=2){
-
-		anagram=anagram.replace("~", “,”);
-		valuesList.set(anagram);
-		context.write(key, valuesList);
-}
-      
+  
     }
   }
 
