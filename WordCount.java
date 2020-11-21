@@ -15,9 +15,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
 	
-  public static class WCMapper extends Mapper<Object, Text, Text, Text>{
+  public static class WCMapper
+       extends Mapper<Object, Text, Text, Text>{
 
-    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+    public void map(Object key, Text value, Context context) 
+    
+    throws IOException, InterruptedException {
     
       StringTokenizer itr = new StringTokenizer(value.toString());
 
@@ -31,31 +34,27 @@ public class WordCount {
     }
   }
 
-  public static class WCReducer extends Reducer<Text,Text,Text,Text> {
-	
-	Text valuesList= new Text();
-	
-    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+  public static class WCReducer
+  
+       extends Reducer<Text,Text,Text,Text> {
+              
+    public void reduce(Text key, Iterable<Text> values, Context context)
+     throws IOException, InterruptedException {
      
-     String anagram = " ";
+      String anagram = null;
       
  for (Text val : values) {
- 	 anagram = anagram + val.toString() + '~';
- 	 
+     if (anagram == null){
+      anagram = val.toString().replaceAll("\\W", "");
+     } else {
+             anagram = anagram + ',' + val.toString();
+             
+             Set<Integer> set = new HashSet<Integer>(anagram);  
      }
-     
-     StringTokenizer token = new StringTokenizer(anagram, "~");
-     
-     if(token.countTokens()>=2){
-     anagram = anagram.replace('~',",");
-     valuesList.set(anagram);
-     context.write(key,anagram);
       }
-  
+       context.write(key, new Text(anagram));
     }
   }
-
-
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
