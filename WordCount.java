@@ -15,49 +15,46 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
 	
-  public static class WCMapper
-       extends Mapper<Object, Text, Text, Text>{
+  public static class WCMapper extends Mapper<Object, Text, Text, Text>{
 
-
-		Text originalWord= new Text();
-		Text sortedWord= new Text();
-		
-    public void map(Object key, Text value, Context context) 
+    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
     
-    throws IOException, InterruptedException {
-     
-     	String word = value.toString().replaceAll("\\W", "");
-		char [] charArray=word.toCharArray();
-		Arrays.sort(charArray);
-	
-		String s= new String(charArray);
+      StringTokenizer itr = new StringTokenizer(value.toString());
 
-		originalWord.set(word);
-		sortedWord.set(s);
-		context.write(sortedWord,originalWord);
-     
-        }
-  }
-
-  public static class WCReducer
-  
-       extends Reducer<Text,Text,Text,Text> {
-              
-    public void reduce(Text key, Iterable<Text> values, Context context)
-     throws IOException, InterruptedException {
-     
-      String anagram = null;
-      
- for (Text val : values) {
-     if (anagram == null){
-      anagram = val.toString().replaceAll("\\W", "");
-     } else {
-             anagram = anagram + ',' + val.toString();
-     }
+      while (itr.hasMoreTokens()) {
+	  String word = itr.nextToken().replaceAll("\\W", "");
+                char[] arr = word.toCharArray();
+                Arrays.sort(arr);
+                String wordKey = new String(arr);
+                context.write(new Text(wordKey), new Text(word));
       }
-       context.write(key, new Text(anagram));
     }
   }
+
+  public static class WCReducer extends Reducer<Text,Text,Text,Text> {
+              
+    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+     
+      String anagram = "";
+      
+ for (Text val : values) {
+ 	anagram=anagram+val.tostring() + "~";
+ 	 
+      }
+
+StringTokenizer token=new StringTokenizer(anagram,”~”);
+
+		if(token.countTokens()>=2){
+
+		anagram=anagram.replace(“~”, “,”);
+		valuesList.set(anagram);
+		context.write(key, valuesList);
+}
+      
+    }
+  }
+
+
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
