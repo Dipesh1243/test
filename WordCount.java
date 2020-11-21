@@ -36,26 +36,28 @@ public class WordCount {
               
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
-      String anagram = null;
-      
- for (Text val : values) {
-     if (anagram == null){
-      anagram = val.toString().replaceAll("\\W", "");
-     } else {
-             anagram = anagram + ',' + val.toString();
-     }
-      }
-       context.write(key, new Text(anagram));
-    }
-  }
+       int count = 0;
+        String temp;
+        String temp1 = "";
+        while(value.iterator().hasNext())
+        {
+            temp = value.iterator().next().toString();
+            count++;
+       
+            temp1 = temp1 + temp + ",";
+       
+        }
+       
+        if (count > 1)
+        {
+            context.write(key, new Text(temp1));
+        }
+}
+}
+
 
   public static void main(String[] args) throws Exception {
      
-     if(args.length < 2) {
-      System.err.println("Usage: WordCount <inPath> <outPath> <numReducer>");
-      return;
-    }
-  
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "word count");
     job.setJarByClass(WordCount.class);
