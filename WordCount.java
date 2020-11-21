@@ -14,7 +14,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
-	
+
+  static Collection<Text> anagrams = new HashSet<Text>();
+  
   public static class WCMapper
        extends Mapper<Object, Text, Text, Text>{
 
@@ -22,20 +24,13 @@ public class WordCount {
     
     throws IOException, InterruptedException {
     
-      StringTokenizer itr = new StringTokenizer(value.toString());
+   	  String word = value.toLowerCase().toString().replaceAll("\\W", "");
+      char[] arr = word.toCharArray();
+      Arrays.sort(arr);
+      String sortedWord = new String(arr);
+      output.collect(sortedWord, word);
 
-      while (itr.hasMoreTokens()) {
-	  String word = itr.nextToken().replaceAll("\\W", "");
-                char[] arr = word.toCharArray();
-                Arrays.sort(arr);
-                
-                int n=removeDuplicates(arr);
-                for(int i = 0; i<n; i++){
-                String wordKey = new String(arr);
-                context.write(new Text(wordKey), new Text(word));
-                }
-                
-      }
+      
     }
   }
 
