@@ -17,6 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class WordCount {
 	
   public static class WCMapper extends Mapper<Object, Text, Text, Text>{
+  
+  static Collection<Text> anagrams = new HashSet<Text>();
 
 	  public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
     
@@ -24,10 +26,10 @@ public class WordCount {
 
       while (token.hasMoreTokens()) {
 	  String word = token.nextToken().replaceAll("\\W", "");
-                char[] arr = word.toCharArray();
-                Arrays.sort(arr);
-                String wordKey = new String(arr);
-                context.write(new Text(wordKey), new Text(word));
+                char[] array = word.toCharArray();
+                Arrays.sort(array);
+                String key = new String(array);
+                context.write(new Text(key), new Text(key));
       }
     }
   }
@@ -36,24 +38,33 @@ public class WordCount {
               
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
      
-       int count = 0;
-        String temp;
-        String temp1 = "";
-        while(value.iterator().hasNext())
-        {
-            temp = value.iterator().next().toString();
-            count++;
-       
-            temp1 = temp1 + temp + ",";
-       
+        Collection<Text> anagrams = new HashSet<Text>();
+
+            String anagram = null;
+
+            for (Text val : values) {
+
+                if (anagram == null) {
+
+                    anagram = val.toString();
+
+                    
+
+                } else {
+
+                    anagram = anagram + ',' + val.toString();
+
+                }
+
+                 anagrams.add(val);
+
+            }
+
+            context.write(key, new Text(anagram));
+
         }
-       
-        if (count > 1)
-        {
-            context.write(key, new Text(temp1));
-        }
-}
-}
+
+    }
 
 
   public static void main(String[] args) throws Exception {
