@@ -41,7 +41,11 @@ public class WordCount {
      
      anagram.add(val.toString());
      
-     context.write(key, new Text(anagram))
+     
+     
+     if(anagram.size() > 1){
+     context.write(key, new Text(anagram));
+     }
      }
     }
   }
