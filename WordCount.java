@@ -48,27 +48,10 @@ public class WordCount {
             }
             Collections.sort(arraylist);
             anagramword.set(arraylist.toString());
-            
+
             if(arraylist.size() > 1){
                 context.write(key, anagramword);
             }
-
-
-            /*HashSet<String> anagram = new HashSet<>();
-
-
-            for (Text val : values) {
-
-                anagram.add(val.toString());
-
-            }
-            ArrayList<String> list = new ArrayList<String>(anagram);
-            Collections.sort(list);
-            anagramword.set(list.toString());
-
-            if (anagram.size() > 1) {
-                context.write(key, anagramword);
-            }*/
         }
     }
 
