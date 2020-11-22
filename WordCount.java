@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.Array;
 import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
@@ -13,7 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
 
-    public static class WCMapper extends Mapper<Object, Text, Text, Text>{
+    public static class WCMapper extends Mapper<Object, Text, Text, Text> {
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
@@ -29,24 +30,45 @@ public class WordCount {
         }
     }
 
-    public static class WCReducer extends Reducer<Text,Text,Text,Text> {
+    public static class WCReducer extends Reducer<Text, Text, Text, Text> {
         private Text anagramword = new Text();
+
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            HashSet<String> anagram = new HashSet<>();
+            ArrayList<String> arraylist = new ArrayList<String>();
+            for (Text val : values) {
+
+                if (arraylist.contains(val.toString())) {
+                    continue;
+
+                } else {
+                    arraylist.add(val.toString());
+                }
+
+            }
+            Collections.sort(arraylist);
+            anagramword.set(arraylist.toString());
+            
+            if(arraylist.size() > 1){
+                context.write(key, anagramword);
+            }
 
 
-            for (Text val : values){
+            /*HashSet<String> anagram = new HashSet<>();
+
+
+            for (Text val : values) {
 
                 anagram.add(val.toString());
 
             }
             ArrayList<String> list = new ArrayList<String>(anagram);
+            Collections.sort(list);
             anagramword.set(list.toString());
 
-            if(anagram.size() > 1){
+            if (anagram.size() > 1) {
                 context.write(key, anagramword);
-            }
+            }*/
         }
     }
 
