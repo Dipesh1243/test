@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -14,54 +12,54 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
-	
-  public static class WCMapper extends Mapper<Object, Text, Text, Text>{
 
-	  public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-    
-      StringTokenizer itr = new StringTokenizer(value.toString());
+    public static class WCMapper extends Mapper<Object, Text, Text, Text>{
 
-      while (itr.hasMoreTokens()) {
-	  String word = itr.nextToken().replaceAll("\\W", "");
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+
+            StringTokenizer itr = new StringTokenizer(value.toString());
+
+            while (itr.hasMoreTokens()) {
+                String word = itr.nextToken().replaceAll("\\W", "");
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
                 String wordKey = new String(arr);
                 context.write(new Text(wordKey), new Text(word));
-      }
+            }
+        }
     }
-  }
 
-  public static class WCReducer extends Reducer<Text,Text,Text,Text> {
-    private Text anagramword = new Text();          
-    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-     
-     HashSet<String> anagram = new HashSet<>();
-    
-     
-     for (Text val : values){
-     
-     anagram.add(val.toString());
-     
-     }
-       List<String> list = new ArrayList<String>(anagram);
-       anagramword.set(list.toString());
-       
-      if(anagram.size() > 1){
-      context.write(key, anagramword);
-     }
+    public static class WCReducer extends Reducer<Text,Text,Text,Text> {
+        private Text anagramword = new Text();
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+
+            HashSet<String> anagram = new HashSet<>();
+
+
+            for (Text val : values){
+
+                anagram.add(val.toString());
+
+            }
+            ArrayList<String> list = new ArrayList<String>(anagram);
+            anagramword.set(list.toString());
+
+            if(anagram.size() > 1){
+                context.write(key, anagramword);
+            }
+        }
     }
-  }
 
-  public static void main(String[] args) throws Exception {
-    Configuration conf = new Configuration();
-    Job job = Job.getInstance(conf, "word count");
-    job.setJarByClass(WordCount.class);
-    job.setMapperClass(WCMapper.class);
-    job.setReducerClass(WCReducer.class);
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(Text.class);
-    FileInputFormat.addInputPath(job, new Path(args[0]));
-    FileOutputFormat.setOutputPath(job, new Path(args[1]));
-    System.exit(job.waitForCompletion(true) ? 0 : 1);
-  }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(WCMapper.class);
+        job.setReducerClass(WCReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
 }
