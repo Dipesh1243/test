@@ -30,17 +30,6 @@ public class WordCount {
             "when'd","when'll","when's","where","where'd","where'll","where's","which","while","who","who'd","who'll","who's",
             "whom","why","why'd","why'll","why's","will","with","won't","would","would've","wouldn't","yet","you","you'd","you'll","you're","you've","your"};
 
-
-
-
-
-
-
-
-
-
-
-
     public static class WCMapper extends Mapper<Object, Text, Text, Text> {
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -101,5 +90,7 @@ public class WordCount {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
+        
+        System.out.println(((ArrayList<String>)arraylist).getcount(anagramword));
     }
 }
