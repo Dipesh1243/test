@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Anagram {
-
+	//list of stop words
     public static String[] stopwords = {
             "'tis", "'twas", "a", "able", "about", "across", "after", "ain't", "all", "almost", "also", "am",
             "among", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been", "but", "by", "can", "can't", "cannot",
@@ -28,18 +28,25 @@ public class Anagram {
             "when'd", "when'll", "when's", "where", "where'd", "where'll", "where's", "which", "while", "who", "who'd", "who'll", "who's",
             "whom", "why", "why'd", "why'll", "why's", "will", "with", "won't", "would", "would've", "wouldn't", "yet", "you", "you'd", "you'll", "you're", "you've", "your"};
 
+
+	/*The main function of the Mapper is to read data from an input file string by string and create a token which can be used to form a "key" in order to group the anagrams,
+	this "key" is passed onto the reducer*/
+	
     public static class WCMapper extends Mapper<Object, Text, Text, Text> {
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-
+			
+			//string tokenizer allows us to convert a string into a token, the "value.toString" will return an integer value that represents the string 
             StringTokenizer token = new StringTokenizer(value.toString());
-
+			//the while loop makes use of the hasMoreTokens method and will continue to run if there are more tokens available
             while (token.hasMoreTokens()) {
+            //A string "word" is set to return the next token from the StringTokenizer, however all special characters in that string will be removed
                 String word = token.nextToken().replaceAll("\\W", "");
-                word.toLowerCase(); //to lowercase
+                word.toLowerCase(); //c
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
                 String wordKey = new String(arr);
+                wordKey.toLowerCase();
                 context.write(new Text(wordKey), new Text(word));
             }
         }
@@ -72,7 +79,7 @@ public class Anagram {
             Collections.sort(arraylist);
             anagramword.set(arraylist.toString());
 
-
+			//outputs the anagram if and only if the length of the anagram is greater than 1
             if (arraylist.size() > 1) {
                 context.write(key, anagramword);
 
