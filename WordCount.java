@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.sql.Array;
 import java.util.*;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -12,8 +11,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class WordCount {
-
+public class Anagram {
 
     public static String[] stopwords = {
 
@@ -34,10 +32,10 @@ public class WordCount {
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
-            StringTokenizer itr = new StringTokenizer(value.toString());
+            StringTokenizer token = new StringTokenizer(value.toString());
 
-            while (itr.hasMoreTokens()) {
-                String word = itr.nextToken().replaceAll("\\W", "");
+            while (token.hasMoreTokens()) {
+                String word = token.nextToken().replaceAll("\\W", "");
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
                 String wordKey = new String(arr);
@@ -83,8 +81,8 @@ public class WordCount {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "word count");
-        job.setJarByClass(WordCount.class);
+        Job job = Job.getInstance(conf, "anagram");
+        job.setJarByClass(Anagram.class);
         job.setMapperClass(WCMapper.class);
         job.setReducerClass(WCReducer.class);
         job.setOutputKeyClass(Text.class);
