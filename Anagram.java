@@ -36,6 +36,7 @@ public class Anagram {
 
             while (token.hasMoreTokens()) {
                 String word = token.nextToken().replaceAll("\\W", "");
+                word.toLowerCase(); //to lowercase
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
                 String wordKey = new String(arr);
