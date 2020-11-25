@@ -60,6 +60,7 @@ public class Anagram {
     public static class WCReducer extends Reducer<Text, Text, Text, Text> {
 
         private Text anagramword = new Text();
+          private Text map = new Text();
         
         
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -76,6 +77,7 @@ public class Anagram {
 
                 
                     hmap.put(val.toString(), count++);
+                    map.set(hmap);
                     
                 
 
@@ -91,10 +93,11 @@ public class Anagram {
 
 			//outputs the anagram if and only if the length of the anagram is greater than 1
             
-                context.write(key, hmap);
+                context.write(key, map);
 
     
         }
+    }
     }
 
     public static void main(String[] args) throws Exception {
