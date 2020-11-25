@@ -61,12 +61,16 @@ public class Anagram {
 
         private Text anagramword = new Text();
         
+        
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        
+        
 
             ArrayList<String> arraylist = new ArrayList<String>();
             for (Text val : values) {
 
                 if (arraylist.contains(val.toString())) {
+                
                  continue;
 
                 } else {
@@ -84,6 +88,7 @@ public class Anagram {
 
             Collections.sort(arraylist);
             anagramword.set(arraylist.toString());
+            key = new Text(arraylist.get(0));
 
 			//outputs the anagram if and only if the length of the anagram is greater than 1
             if (arraylist.size() > 1) {
