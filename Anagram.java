@@ -34,6 +34,9 @@ public class Anagram {
 	
     public static class WCMapper extends Mapper<Object, Text, Text, Text> {
 
+		private Text keyword = new Text();
+		private Text anagramword = new Text();
+		
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			
 			//string tokenizer allows us to convert a string into a token, the "value.toString" will return an integer value that represents the string 
@@ -42,12 +45,14 @@ public class Anagram {
             while (token.hasMoreTokens()) {
             //A string "word" is set to return the next token from the StringTokenizer, however all special characters in that string will be removed
                 String word = token.nextToken().replaceAll("\\W", "");
-                word.toLowerCase(); //c
+                word.toLowerCase(); 
                 char[] arr = word.toCharArray();
                 Arrays.sort(arr);
                 String wordKey = new String(arr);
                 wordKey.toLowerCase();
-                context.write(new Text(wordKey), new Text(word));
+                keyword.set(wordKey);
+                amagramword.set(word);
+                context.write(keyword, anagramword);
             }
         }
     }
