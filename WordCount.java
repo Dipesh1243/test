@@ -61,12 +61,14 @@ public class Anagram {
 
         private Text anagramword = new Text();
         
+        
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             ArrayList<String> arraylist = new ArrayList<String>();
             for (Text val : values) {
 
                 if (arraylist.contains(val.toString())) {
+                
                  continue;
 
                 } else {
