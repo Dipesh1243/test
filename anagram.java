@@ -60,24 +60,27 @@ public class Anagram {
     public static class WCReducer extends Reducer<Text, Text, Text, Text> {
 
         private Text anagramword = new Text();
-          private Text map = new Text();
         
         
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-			HashMap<String, Integer> hmap = new HashMap<String, Integer>();
-			
-			int count = 0;
+            Map<String, Integer> wordCount = new HashMap<>();
             
             for (Text val : values) {
 
-                if (hmap.containsKey(val.toString())) {
+               
+                if(wordCount.containsKey(val)){
                 
+                wordCount.put(val, wordcount.getValue(val) + 1);
                 
+                } else{
+                
+                wordCount.put(val, 1);
+                }
+             
 
-                
-                    hmap.put(val.toString(), count++);
-                    map.set(hmap);
+               
+                    
                     
                 
 
@@ -89,15 +92,13 @@ public class Anagram {
                 }
             }*/
 
-           
+            
 
 			//outputs the anagram if and only if the length of the anagram is greater than 1
-            
-                context.write(key, map);
+          
+                context.write(key, wordCount.get(val));
 
-    
         }
-    }
     }
 
     public static void main(String[] args) throws Exception {
