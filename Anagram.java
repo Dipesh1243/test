@@ -44,14 +44,12 @@ public class Anagram {
 			//the while loop makes use of the hasMoreTokens method and will continue to run if there are more tokens available
             while (token.hasMoreTokens()) {
             //A string "word" is set to return the next token from the StringTokenizer, however all special characters in that string will be removed
-                String word = token.nextToken().replaceAll("\\W", "");
-                word.toLowerCase(); 
-                char[] arr = word.toCharArray();
+                String word = token.nextToken().replaceAll("\\W", ""); 
+                char[] arr = word.toCharArray().toLowerCase();
                 Arrays.sort(arr);
-                String wordKey = new String(arr);
-                wordKey.toLowerCase();
+                String wordKey = new String(arr).toLowerCase();
                 keyword.set(wordKey);
-                amagramword.set(word);
+                anagramword.set(word);
                 context.write(keyword, anagramword);
             }
         }
