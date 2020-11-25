@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Anagram {
-	//list of stop words
+    //list of stop words
     public static String[] stopwords = {
             "'tis", "'twas", "a", "able", "about", "across", "after", "ain't", "all", "almost", "also", "am",
             "among", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been", "but", "by", "can", "can't", "cannot",
@@ -31,25 +31,25 @@ public class Anagram {
 
 	/*The main function of the Mapper is to read data from an input file string by string and create
 	 a token which can be used to form a "key" in order to group the anagrams, this "key" is passed onto the reducer*/
-	
+
     public static class WCMapper extends Mapper<Object, Text, Text, Text> {
 
-		private Text keyword = new Text();
-		private Text anagramword = new Text();
-		
+        private Text keyword = new Text();
+        private Text anagramword = new Text();
+
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			
-			//string tokenizer allows us to convert a string into a token, the "value.toString" will return an integer value that represents the string 
+
+            //string tokenizer allows us to convert a string into a token, the "value.toString" will return an integer value that represents the string
             StringTokenizer token = new StringTokenizer(value.toString());
-			/*the while loop makes use of the hasMoreTokens method and will continue to run if there are more tokens available, 
+			/*the while loop makes use of the hasMoreTokens method and will continue to run if there are more tokens available,
 			it is the algorithm used to pull out the key and words from the input file*/
             while (token.hasMoreTokens()) {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
-                String word = token.nextToken().replaceAll("\\W", "").toLowerCase(); 
-                char[] achar = word.toCharArray();										
-                Arrays.sort(achar);														
-                String wordKey = new String(achar).toLowerCase();								
+                String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
+                char[] achar = word.toCharArray();
+                Arrays.sort(achar);
+                String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
                 context.write(keyword, anagramword);
@@ -60,43 +60,46 @@ public class Anagram {
     public static class WCReducer extends Reducer<Text, Text, Text, Text> {
 
         private Text anagramword = new Text();
-        
-        
+
+
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            Map<String, Integer> wordCount = new HashMap<>();
-            
+            HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
+            HashMap<String, Integer> wordCount1 = new HashMap<String, Integer>();
+
             for (Text val : values) {
 
-               
-                if(wordCount.containsKey(val)){
-                
-                wordCount.put(val, wordcount.getValue(val) + 1);
-                
-                } else{
-                
-                wordCount.put(val, 1);
-                }
-             
 
-               
-                    
-                    
-                
+                if(wordCount.containsKey(val.toString())){
+
+                    wordCount.put(val.toString(), wordCount.get(val.toString()) + 1);
+
+                } else{
+
+                    wordCount.put(val.toString(), 1);
+                }
 
             }
 
-           /* for (int j = 0; j < stopwords.length; j++) {
-                if (arraylist.contains(stopwords[j])) {
-                    arraylist.remove(stopwords[j]);
+
+            for (int j = 0; j < stopwords.length; j++) {
+                if (wordCount.containsKey(stopwords[j])) {
+                    wordCount.remove(stopwords[j]);
                 }
-            }*/
+            }
 
-            
+            wordCount.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .forEachOrdered(x -> wordCount1.put(x.getKey(), x.getValue()));
 
-			//outputs the anagram if and only if the length of the anagram is greater than 1
-          
-                context.write(key, wordCount.get(val));
+
+
+
+
+            context.write(key, wordCount1.toString());
+
+
 
         }
     }
