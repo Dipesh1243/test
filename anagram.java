@@ -48,7 +48,7 @@ public class Anagram {
              however all special characters in that string will be removed and the string will be changed to lowercase*/
                 String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
                 char[] achar = word.toCharArray();
-                Arrays.sort(achar);
+                Arrays.sort(achar); //NOT REMOVING NUMBERS
                 String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
@@ -59,13 +59,13 @@ public class Anagram {
 
     public static class WCReducer extends Reducer<Text, Text, Text, Text> {
 
-        private Text anagramword = new Text();
+        private Text sortedtext = new Text();
 
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
-            HashMap<String, Integer> wordCount1 = new HashMap<String, Integer>();
+            //HashMap<String, Integer> wordCount1 = new HashMap<String, Integer>();
 
             for (Text val : values) {
 
@@ -80,7 +80,9 @@ public class Anagram {
                 }
 
             }
-
+            
+			TreeMap<String, Integer> sorted = new TreeMap<>(); 
+  			sorted.putAll(wordCount); 
 
             for (int j = 0; j < stopwords.length; j++) {
                 if (wordCount.containsKey(stopwords[j])) {
@@ -88,19 +90,21 @@ public class Anagram {
                 }
             }
 
-            wordCount.entrySet()
+            /*wordCount.entrySet()
                     .stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                    .forEachOrdered(x -> wordCount1.put(x.getKey(), x.getValue()));
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> wordCount1.put(x.getKey(), x.getValue()));*/
+                    
+            
+                    
+
+            if(sorted.size() > 1) {
 
 
+                sortedtext.set(sorted.toString());
+                context.write(key, sortedtext);
 
-
-
-            context.write(key, wordCount1.toString());
-
-
-
+            }
         }
     }
 
