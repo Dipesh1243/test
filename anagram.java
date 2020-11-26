@@ -86,7 +86,7 @@ public class Anagram {
                 }
             }
             
-            TreeMap<Integer, String> map = new TreeMap<Integer, String>(hmap); 
+            TreeMap<String, Integer> map = new TreeMap<String, Integer>(hmap); 
             Set set2 = sorted.entrySet();
             Iterator iterator2 = set2.iterator();
             while(iterator2.hasNext()) {
@@ -95,7 +95,7 @@ public class Anagram {
             
             if (map.size() > 1) {
 
-                map.set(sorted.toString());
+                sortedtext.set(map.toString());
                 context.write(key, map);
 
             }
