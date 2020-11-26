@@ -92,9 +92,9 @@ public class Anagram {
     .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) 
     .forEachOrdered(x -> sorted1.put(x.getKey(), x.getValue()));
 
-            if (sorted.size() > 1) {
+            if (sorted1.size() > 1) {
 
-                sortedtext.set(sorted.toString());
+                sortedtext.set(sorted1.toString());
                 context.write(key, sortedtext);
 
             }
