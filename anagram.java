@@ -65,7 +65,7 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             LinkedHashMap<String, Integer> sorted = new LinkedHashMap<String, Integer>();
-	    LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
+			LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
             
             for (Text val : values) {
 
@@ -81,16 +81,18 @@ public class Anagram {
 
             }
             
-            sorted.entrySet()
-    		.stream()
-    		.sorted(Map.Entry.comparingByValue())
-    		.forEachOrdered(x -> sorted1.put(x.getKey(), x.getValue()));
+          
 
             for (int j = 0; j < stopwords.length; j++) {
                 if (sorted1.containsKey(stopwords[j])) {
                     sorted1.remove(stopwords[j]);
                 }
             }
+            
+             sorted.entrySet()
+    .stream()
+    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) 
+    .forEachOrdered(x -> sorted1.put(x.getKey(), x.getValue()));
             
             if (sorted1.size() > 1) {
 
