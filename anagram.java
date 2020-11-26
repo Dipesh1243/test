@@ -64,8 +64,8 @@ public class Anagram {
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            TreeMap<String, Integer> sorted = new TreeMap<String, Integer>();
-            TreeMap<String, Integer> sorted1 = new TreeMap<String, Integer>();
+            LinkedHashMap<String, Integer> sorted = new LinkedHashMap<String, Integer>();
+            LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
             
             for (Text val : values) {
 
