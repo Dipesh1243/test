@@ -47,6 +47,7 @@ public class Anagram {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
                 String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
+                word.replaceAll("\\^([0-9]+)", "");
                 char[] achar = word.toCharArray();
                 Arrays.sort(achar); //NOT REMOVING NUMBERS
                 String wordKey = new String(achar).toLowerCase();
