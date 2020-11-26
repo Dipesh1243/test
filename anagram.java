@@ -65,13 +65,8 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             TreeMap<String, Integer> sorted = new TreeMap<String, Integer>();
+            TreeMap<String, Integer> sorted1 = new TreeMap<String, Integer>();
             
-            public ValueComparator(TreeMap<String, Integer> sorted){
-            this.map.putAll(sorted);
-            }
-            
-            
-	
             for (Text val : values) {
 
 
@@ -91,16 +86,12 @@ public class Anagram {
                     sorted.remove(stopwords[j]);
                 }
             }
+            
+	sorted.entrySet()
+    .stream()
+    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) 
+    .forEachOrdered(x -> sorted1.put(x.getKey(), x.getValue()));
 
-			@Override
-			public int compare(String s1, String s2){
-			if(sorted.get(s1) >= sorted.get(s2)){
-				return -1;
-			}else{
-				return 1;
-			}
-		}
-		
             if (sorted.size() > 1) {
 
                 sortedtext.set(sorted.toString());
