@@ -49,12 +49,6 @@ public class Anagram {
                 String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
                 char[] achar = word.toCharArray();
                 Arrays.sort(achar); //NOT REMOVING NUMBERS
-                
-            for (int j = 0; j < stopwords.length; j++) {
-                if (achar.contains(stopwords[j])) {
-                    achar.remove(stopwords[j]);
-                }
-            }
                 String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
@@ -86,8 +80,16 @@ public class Anagram {
 
             }
             
+            for (int j = 0; j < stopwords.length; j++) {
+                if (wordCount.containsKey(stopwords[j])) {
+                    wordCount.remove(stopwords[j]);
+                }
+            }
+            
 			TreeMap<String, Integer> sorted = new TreeMap<>(); 
   			sorted.putAll(wordCount); 
+
+            
 
             if(sorted.size() > 1) {
             
