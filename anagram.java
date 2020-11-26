@@ -86,19 +86,24 @@ public class Anagram {
                 }
             }
             
-            ArrayList<Integer> sorted1 = new ArrayList<>();
-            
+            ArrayList sortedElements = new ArrayList<>();
+           
             sorted.entrySet()
                         .stream()
                         .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                         .forEach(entry -> { 
-                            for(int i = 1; i <= entry.getValue(); i++) 
-                                sorted1.add(entry.getKey());
+                         class get value
+                          {
+                            while(int i = 1)
+                             i <= entry.getValue();
+                                i++; 
+                             }
+                                sortedElements.add(entry.getKey());
                                 });
-            
+                                
             if (sorted.size() > 1) {
 
-                sortedtext.set(sorted1.toString());
+                sortedtext.set(sortedElements.toString());
                 context.write(key, sortedtext);
 
             }
