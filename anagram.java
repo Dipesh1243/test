@@ -46,9 +46,9 @@ public class Anagram {
             while (token.hasMoreTokens()) {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
-                String word = token.nextToken().replaceAll("[^a-z A-Z]").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
+                String word = token.nextToken().replaceAll("[^a-z A-Z]","").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
                 char[] achar = word.toCharArray();
-                Arrays.sort(achar); //NOT REMOVING NUMBERS
+                Arrays.sort(achar); 
                 String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
@@ -64,32 +64,45 @@ public class Anagram {
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-          
             TreeMap<String, Integer> sorted = new TreeMap<String, Integer>();
+            
+            public ValueComparator(TreeMap<String, Integer> sorted){
+            this.map.putAll(sorted);
+            }
+            
+            
+	
             for (Text val : values) {
 
 
-                if(sorted.containsKey(val.toString())){
+                if (sorted.containsKey(val.toString())) {
 
                     sorted.put(val.toString(), sorted.get(val.toString()) + 1);
 
-                } else{
+                } else {
 
                     sorted.put(val.toString(), 1);
                 }
 
             }
-            
+
             for (int j = 0; j < stopwords.length; j++) {
                 if (sorted.containsKey(stopwords[j])) {
                     sorted.remove(stopwords[j]);
                 }
             }
-            
-			
 
-            if(sorted.size() > 1) {
-            
+			@Override
+			public int compare(String s1, String s2){
+			if(sorted.get(s1) >= sorted.get(s2)){
+				return -1;
+			}else{
+				return 1;
+			}
+		}
+		
+            if (sorted.size() > 1) {
+
                 sortedtext.set(sorted.toString());
                 context.write(key, sortedtext);
 
