@@ -49,6 +49,12 @@ public class Anagram {
                 String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
                 char[] achar = word.toCharArray();
                 Arrays.sort(achar); //NOT REMOVING NUMBERS
+                
+            for (int j = 0; j < stopwords.length; j++) {
+                if (achar.contains(stopwords[j])) {
+                    achar.remove(stopwords[j]);
+                }
+            }
                 String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
@@ -65,8 +71,7 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
-            //HashMap<String, Integer> wordCount1 = new HashMap<String, Integer>();
-
+            
             for (Text val : values) {
 
 
@@ -84,23 +89,8 @@ public class Anagram {
 			TreeMap<String, Integer> sorted = new TreeMap<>(); 
   			sorted.putAll(wordCount); 
 
-            for (int j = 0; j < stopwords.length; j++) {
-                if (wordCount.containsKey(stopwords[j])) {
-                    wordCount.remove(stopwords[j]);
-                }
-            }
-
-            /*wordCount.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByValue())
-                    .forEachOrdered(x -> wordCount1.put(x.getKey(), x.getValue()));*/
-                    
-            
-                    
-
             if(sorted.size() > 1) {
-
-
+            
                 sortedtext.set(sorted.toString());
                 context.write(key, sortedtext);
 
