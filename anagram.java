@@ -46,8 +46,7 @@ public class Anagram {
             while (token.hasMoreTokens()) {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
-                String word = token.nextToken().replaceAll("\\W", "").toLowerCase();
-                word.replaceAll("\\^([0-9]+)", "");
+                String word = token.nextToken().replaceAll("\\W", "").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
                 char[] achar = word.toCharArray();
                 Arrays.sort(achar); //NOT REMOVING NUMBERS
                 String wordKey = new String(achar).toLowerCase();
@@ -65,32 +64,29 @@ public class Anagram {
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
-            
+          
+            TreeMap<String, Integer> sorted = new TreeMap<String, Integer>();
             for (Text val : values) {
 
 
-                if(wordCount.containsKey(val.toString())){
+                if(sorted.containsKey(val.toString())){
 
-                    wordCount.put(val.toString(), wordCount.get(val.toString()) + 1);
+                    sorted.put(val.toString(), sorted.get(val.toString()) + 1);
 
                 } else{
 
-                    wordCount.put(val.toString(), 1);
+                    sorted.put(val.toString(), 1);
                 }
 
             }
             
             for (int j = 0; j < stopwords.length; j++) {
-                if (wordCount.containsKey(stopwords[j])) {
-                    wordCount.remove(stopwords[j]);
+                if (sorted.containsKey(stopwords[j])) {
+                    sorted.remove(stopwords[j]);
                 }
             }
             
-			TreeMap<String, Integer> sorted = new TreeMap<>(); 
-  			sorted.putAll(wordCount); 
-
-            
+			
 
             if(sorted.size() > 1) {
             
