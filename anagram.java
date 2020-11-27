@@ -168,7 +168,7 @@ public class Anagram {
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
         job2.setInputFormatClass(KeyValueTextInputFormat.class);
-        FileInputFormat.addInputPath(job2, new Path(args[0]));
+        FileInputFormat.addInputPath(job2, new Path(args[1]));
         FileOutputFormat.setOutputPath(job2, new Path(args[1]+ "/secondoutput"));
         System.exit(job2.waitForCompletion(true) ? 0 : 1);
         
