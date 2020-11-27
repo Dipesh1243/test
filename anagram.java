@@ -32,7 +32,7 @@ public class Anagram {
 	/*The main function of the Mapper is to read data from an input file string by string and create
 	 a token which can be used to form a "key" in order to group the anagrams, this "key" is passed onto the reducer*/
 
-    public static class WCMapper extends Mapper<Object, Text, Text, Text> {
+    public static class AnagramMapper extends Mapper<Object, Text, Text, Text> {
 
         private Text keyword = new Text();
         private Text anagramword = new Text();
@@ -57,7 +57,7 @@ public class Anagram {
         }
     }
 
-    public static class WCReducer extends Reducer<Text, Text, Text, Text> {
+    public static class AnagramReducer extends Reducer<Text, Text, Text, Text> {
 
         private Text sortedtext = new Text();
 
@@ -117,8 +117,8 @@ public class Anagram {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "anagram");
         job.setJarByClass(Anagram.class);
-        job.setMapperClass(WCMapper.class);
-        job.setReducerClass(WCReducer.class);
+        job.setMapperClass(AnagramMapper.class);
+        job.setReducerClass(AnagramReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
