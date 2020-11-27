@@ -122,7 +122,7 @@ public class Anagram {
      @Override
      public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
      
-     int newVal = Integer.parseInt(value.toString());
+     int newVal = value.toString();
      anagram2.set(newVal);
      context.write(anagram2, key);
      
@@ -137,7 +137,7 @@ public class Anagram {
       public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
       for(Text val : values){
       anagram3.set = val;
-      context.write(key,anagram3)
+      context.write(key,anagram3);
       }
       }
      }
