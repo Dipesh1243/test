@@ -9,6 +9,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -166,8 +167,9 @@ public class Anagram {
         job2.setReducerClass(AnagramReducerAlphabet.class);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
+        job2.setInputFormatClass(KeyValueTextInputFormat.class);
         FileInputFormat.addInputPath(job2, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job2, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job2, new Path(args[1]+ "/secondoutput"));
         System.exit(job2.waitForCompletion(true) ? 0 : 1);
         
         }
