@@ -65,7 +65,6 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> sorted = new HashMap<String, Integer>();
-            HashMap<String, Integer> sorted1 = new HashMap<String, Integer>();
             
             for (Text val : values) {
 
@@ -88,23 +87,22 @@ public class Anagram {
             }
             
             List<Map.Entry<String, Integer> > list = 
-               new LinkedList<Map.Entry<String, Integer> >(sorted.entrySet()); 
-            
-            
-            
-            Collections.sort(list, new Comparator<Map.Entry<String, Integer> >(){
-            @Override
+               new LinkedList<Map.Entry<String, Integer> >(sorted.entrySet());
+               
+               
+               Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() { 
+               @Override
             public int compare(Map.Entry<String, Integer> o1,  
-                               Map.Entry<String, Integer> o2){
-                               return (o1.getValue()).compareTo(o2.getValue()); 
-                               }
-            });
-            
-            for(Map.Entry<String, Integer> aa : list) { 
+                               Map.Entry<String, Integer> o2) 
+            { 
+                return -1*(o1.getValue()).compareTo(o2.getValue()); 
+            } 
+        });
+        
+        HashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>(); 
+        for (Map.Entry<String, Integer> aa : list) { 
             sorted1.put(aa.getKey(), aa.getValue()); 
         } 
-        	return sorted1; 
-            
             
             if (sorted1.size() > 1) {
 
