@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Anagram {
-    //list of stop words
+
     public static String[] stopwords = {
             "'tis", "'twas", "a", "able", "about", "across", "after", "ain't", "all", "almost", "also", "am",
             "among", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been", "but", "by", "can", "can't", "cannot",
@@ -46,9 +46,9 @@ public class Anagram {
             while (token.hasMoreTokens()) {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
-                String word = token.nextToken().replaceAll("[^a-z A-Z]","").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
+                String word = token.nextToken().replaceAll("[^a-z A-Z]", "").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
                 char[] achar = word.toCharArray();
-                Arrays.sort(achar); 
+                Arrays.sort(achar);
                 String wordKey = new String(achar).toLowerCase();
                 keyword.set(wordKey);
                 anagramword.set(word);
@@ -65,7 +65,9 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> sorted = new HashMap<String, Integer>();
-            
+            LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
+
+
             for (Text val : values) {
 
 
@@ -85,25 +87,23 @@ public class Anagram {
                     sorted.remove(stopwords[j]);
                 }
             }
-            
-            List<Map.Entry<String, Integer> > list = 
-               new LinkedList<Map.Entry<String, Integer> >(sorted.entrySet());
-               
-               
-               Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() { 
-               @Override
-            public int compare(Map.Entry<String, Integer> o1,  
-                               Map.Entry<String, Integer> o2) 
-            { 
-                return -1*(o1.getValue()).compareTo(o2.getValue()); 
-            } 
-        });
-        
-        HashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>(); 
-        for (Map.Entry<String, Integer> aa : list) { 
-            sorted1.put(aa.getKey(), aa.getValue()); 
-        } 
-            
+
+            List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
+
+
+            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                @Override
+                public int compare(Map.Entry<String, Integer> x,
+                                   Map.Entry<String, Integer> y) {
+                    return -1 * (x.getValue()).compareTo(y.getValue());
+                }
+            });
+
+
+            for (Map.Entry<String, Integer> listval : list) {
+                sorted1.put(listval.getKey(), listval.getValue());
+            }
+
             if (sorted1.size() > 1) {
 
                 sortedtext.set(sorted1.toString());
