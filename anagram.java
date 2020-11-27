@@ -115,14 +115,14 @@ public class Anagram {
     
     
     
-    public static class AnagramMapperAlphabet extends Mapper<Object, Text, Text, Text> {
+    public static class AnagramMapperAlphabet extends Mapper<Text, Text, Text, Text> {
     
      private Text anagram2 = new Text();
     
      @Override
-     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+     public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
      
-     int newVal = value.toString();
+ String newVal = value.toString();
      anagram2.set(newVal);
      context.write(anagram2, key);
      
@@ -136,7 +136,7 @@ public class Anagram {
      @Override
       public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
       for(Text val : values){
-      anagram3.set = val;
+      anagram3.set(val);
       context.write(key,anagram3);
       }
       }
