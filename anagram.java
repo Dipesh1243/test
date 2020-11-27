@@ -88,19 +88,19 @@ public class Anagram {
                 }
             }
 
-            List<String, Integer> list = new LinkedList<String, Integer>(sorted.entrySet());
+            List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
 
 
-            Collections.sort(list, new Comparator<String, Integer>() {
+            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
                 @Override
-                public int compare(<String, Integer> x,
-                                   <String, Integer> y) {
+                public int compare(Map.Entry<String, Integer> x,
+                                   Map.Entry<String, Integer> y) {
                     return -1 * (x.getValue()).compareTo(y.getValue());
                 }
             });
 
 
-            for (<String, Integer> listval : list) {
+            for (Map.Entry<String, Integer> listval : list) {
                 sorted1.put(listval.getKey(), listval.getValue());
             }
 
