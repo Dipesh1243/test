@@ -95,7 +95,7 @@ public class Anagram {
                 @Override
                 public int compare(Map.Entry<String, Integer> x,
                                    Map.Entry<String, Integer> y) {
-                    return (y.getValue()).compareTo(x.getValue());
+                    return -1 * (x.getValue()).compareTo(y.getValue());
                 }
             });
 
@@ -122,16 +122,23 @@ public class Anagram {
      @Override
      public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
      
-     //String hasd = anagram2.value.toString().substring();
+     int newVal = Integer.parseInt(value.toString());
+     anagram2.set(newVal);
+     context.write(anagram2, key);
      
      
      }
     }
     
      public static class AnagramReducerAlphabet extends Reducer<Text, Text, Text, Text> {
+     private Text anagram3 = new Text();
+     
      @Override
       public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-      
+      for(Text val : values){
+      anagram3.set = val;
+      context.write(key,anagram3)
+      }
       }
      }
 
@@ -156,7 +163,7 @@ public class Anagram {
         Job job2 = Job.getInstance(conf2, "sort alphabetically");
         job2.setJarByClass(Anagram.class);
         job2.setMapperClass(AnagramMapperAlphabet.class);
-        job2.AnagramReducerAlphabet(AnagramReducer.class);
+        job2.setReducerClass(AnagramReducerAlphabet.class);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job2, new Path(args[0]));
