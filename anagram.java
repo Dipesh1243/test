@@ -93,8 +93,7 @@ public class Anagram {
 
             Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
                 @Override
-                public int compare(Map.Entry<String, Integer> x,
-                                   Map.Entry<String, Integer> y) {
+                public int compare(Map.Entry<String, Integer> (x, y)) {
                     return -1 * (x.getValue()).compareTo(y.getValue());
                 }
             });
