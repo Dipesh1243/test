@@ -66,7 +66,7 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> sorted = new HashMap<String, Integer>();
-           // LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
+            LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
 
 
             for (Text val : values) {
@@ -88,30 +88,33 @@ public class Anagram {
                     sorted.remove(stopwords[j]);
                 }
             }
-            
-            TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(sorted);
-            
-Set<Entry<String, Integer>> set = sorted.entrySet();
-List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(set);
-Collections.sort( list, new Comparator<Map.Entry<String, Integer>>()
-{
-@Override
-  public int compare( Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2 )
-  {
-    int result = (o2.getValue()).compareTo( o1.getValue() );
-    if (result != 0) {
-      return result;
-    } else {
-      return o1.getKey().compareTo(o2.getKey());
-    }
-  }
-} );
 
-for (Map.Entry<String, Integer> listval : list) {
+			ArrayList<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(sorted.entrySet());
+			
+			
+			Comparator<Map.Entry<String, Integer>> myComparator =
+			new Comparator<Map.Entry<String, Integer>>(){
+			@Override
+            public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
+                Integer v1 = e1.getValue();
+                Integer v2 = e2.getValue();
+                return v1.compareTo(v2);
+            }
+			
+			};
+			
+			Collections.sort(list, myComparator);
+			
+			for (Map.Entry<String, Integer> listval : list) {
                 sorted1.put(listval.getKey(), listval.getValue());
             }
 			
-
+			
+			
+			
+			
+			
+			
            /* List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
 
 
