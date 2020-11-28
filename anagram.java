@@ -98,7 +98,7 @@ public class Anagram {
             public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
                 Integer v1 = e1.getValue();
                 Integer v2 = e2.getValue();
-                return v1.compareTo(v2);
+                return v2.compareTo(v1);
             }
 			
 			};
@@ -108,29 +108,7 @@ public class Anagram {
 			for (Map.Entry<String, Integer> listval : list) {
                 sorted1.put(listval.getKey(), listval.getValue());
             }
-			
-			
-			
-			
-			
-			
-			
-           /* List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
-
-
-            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-                @Override
-                public int compare(Map.Entry<String, Integer> x,
-                                   Map.Entry<String, Integer> y) {
-                    return -1 * (x.getValue()).compareTo(y.getValue());
-                }
-            });
-
-
-            for (Map.Entry<String, Integer> listval : list) {
-                sorted1.put(listval.getKey(), listval.getValue());
-            }*/
-
+		
             if (sorted1.size() > 1) {
 
                 sortedtext.set(sorted1.toString());
