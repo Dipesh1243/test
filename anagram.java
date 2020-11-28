@@ -66,7 +66,7 @@ public class Anagram {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             HashMap<String, Integer> sorted = new HashMap<String, Integer>();
-            LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
+           // LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
 
 
             for (Text val : values) {
@@ -88,33 +88,33 @@ public class Anagram {
                     sorted.remove(stopwords[j]);
                 }
             }
+            
+           // TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(sorted);
+			LinkedHashMap<String, Integer> sortedMap = 
+    map.entrySet().stream().
+    sorted(Entry.comparingByValue()).
+    collect(Collectors.toMap(Entry::getKey, Entry::getValue,
+                             (e1, e2) -> e1, LinkedHashMap::new));
 
-           // List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
+           /* List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
 
 
-@Override
-sorted.entrySet()
-    .stream()
-    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) 
-    .forEachOrdered(x -> sorted1.put(x.getKey(), x.getValue()));
-    
-    
-          /*  Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-               @Override
+            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                @Override
                 public int compare(Map.Entry<String, Integer> x,
                                    Map.Entry<String, Integer> y) {
                     return -1 * (x.getValue()).compareTo(y.getValue());
                 }
-            });*/
+            });
 
 
-          /*  for (Map.Entry<String, Integer> listval : list) {
+            for (Map.Entry<String, Integer> listval : list) {
                 sorted1.put(listval.getKey(), listval.getValue());
             }*/
 
-            if (sorted1.size() > 1) {
+            if (sortedMap.size() > 1) {
 
-                sortedtext.set(sorted1.toString());
+                sortedtext.set(sortedMap.toString());
                 context.write(key, sortedtext);
 
             }
