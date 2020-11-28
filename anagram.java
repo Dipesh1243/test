@@ -113,41 +113,39 @@ public class Anagram {
             }
         }
     }
-    
-    
-    
+
+
     public static class AnagramMapperAlphabet extends Mapper<Text, Text, Text, Text> {
-    
-     private Text anagram2 = new Text();
-    
-     @Override
-     public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
-     
- String newVal = value.toString();
-     anagram2.set(newVal);
-     context.write(anagram2, key);
-     
-     
-     }
+
+        private Text anagram2 = new Text();
+
+        @Override
+        public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+
+            String newVal = value.toString();
+            anagram2.set(newVal);
+            context.write(key, anagram2);
+
+        }
     }
-    
-     public static class AnagramReducerAlphabet extends Reducer<Text, Text, Text, Text> {
-     private Text anagram3 = new Text();
-     
-     @Override
-      public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-      for(Text val : values){
-      anagram3.set(val);
-      context.write(key,anagram3);
-      }
-      }
-     }
+
+    public static class AnagramReducerAlphabet extends Reducer<Text, Text, Text, Text> {
+        private Text anagram3 = new Text();
+
+        @Override
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            for (Text val : values) {
+                anagram3.set(val);
+                context.write(key, anagram3);
+            }
+        }
+    }
 
 
     public static void main(String[] args) throws Exception {
-    
+
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "anagram by frequency");
+        Job job = Job.getInstance(conf, "sort by frequency");
         job.setJarByClass(Anagram.class);
         job.setMapperClass(AnagramMapper.class);
         job.setReducerClass(AnagramReducer.class);
@@ -155,23 +153,23 @@ public class Anagram {
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        
-        int val =  job.waitForCompletion(true) ? 0 : 1;
-        
-        if(val == 0){
-        
-        Configuration conf2 = new Configuration();
-        Job job2 = Job.getInstance(conf2, "sort alphabetically");
-        job2.setJarByClass(Anagram.class);
-        job2.setMapperClass(AnagramMapperAlphabet.class);
-        job2.setReducerClass(AnagramReducerAlphabet.class);
-        job2.setOutputKeyClass(Text.class);
-        job2.setOutputValueClass(Text.class);
-        job2.setInputFormatClass(KeyValueTextInputFormat.class);
-        FileInputFormat.addInputPath(job2, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job2, new Path(args[1]+ "/secondoutput"));
-        System.exit(job2.waitForCompletion(true) ? 0 : 1);
-        
+
+        int val = job.waitForCompletion(true) ? 0 : 1;
+
+        if (val == 0) {
+
+            Configuration conf2 = new Configuration();
+            Job job2 = Job.getInstance(conf2, "sort alphabetically");
+            job2.setJarByClass(Anagram.class);
+            job2.setMapperClass(AnagramMapperAlphabet.class);
+            job2.setReducerClass(AnagramReducerAlphabet.class);
+            job2.setOutputKeyClass(Text.class);
+            job2.setOutputValueClass(Text.class);
+            job2.setInputFormatClass(KeyValueTextInputFormat.class);
+            FileInputFormat.addInputPath(job2, new Path(args[1]));
+            FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/secondoutput"));
+            System.exit(job2.waitForCompletion(true) ? 0 : 1);
+
         }
 
 
