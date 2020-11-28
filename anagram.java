@@ -47,7 +47,7 @@ public class Anagram {
             while (token.hasMoreTokens()) {
             /*A string "word" is set to return the next token from the StringTokenizer,
              however all special characters in that string will be removed and the string will be changed to lowercase*/
-                String word = token.nextToken().replaceAll("[^a-z A-Z]", "").toLowerCase(); //FIX SO NO DAM NUMBERS COMES
+                String word = token.nextToken().replaceAll("[^a-z A-Z]", "").toLowerCase(); 
                 char[] achar = word.toCharArray();
                 Arrays.sort(achar);
                 String wordKey = new String(achar).toLowerCase();
@@ -67,18 +67,18 @@ public class Anagram {
 
             HashMap<String, Integer> sorted = new HashMap<String, Integer>();
             LinkedHashMap<String, Integer> sorted1 = new LinkedHashMap<String, Integer>();
-
+			
 
             for (Text val : values) {
 
+				String x = val.toString();
+                if (sorted.containsKey(x)) {
 
-                if (sorted.containsKey(val.toString())) {
-
-                    sorted.put(val.toString(), sorted.get(val.toString()) + 1);
+                    sorted.put(x, sorted.get(x) + 1);
 
                 } else {
 
-                    sorted.put(val.toString(), 1);
+                    sorted.put(x, 1);
                 }
 
             }
@@ -92,8 +92,7 @@ public class Anagram {
             ArrayList<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(sorted.entrySet());
 
 
-            Comparator<Map.Entry<String, Integer>> myComparator =
-                    new Comparator<Map.Entry<String, Integer>>() {
+            Comparator<Map.Entry<String, Integer>> myComparator = new Comparator<Map.Entry<String, Integer>>() {
                         @Override
                         public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
                             Integer v1 = e1.getValue();
