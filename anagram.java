@@ -89,12 +89,28 @@ public class Anagram {
                 }
             }
             
-           // TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(sorted);
-			LinkedHashMap<String, Integer> sortedMap = 
-    map.entrySet().stream().
-    sorted(Entry.comparingByValue()).
-    collect(Collectors.toMap(Entry::getKey, Entry::getValue,
-                             (e1, e2) -> e1, LinkedHashMap::new));
+            TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(sorted);
+            
+Set<Entry<String, Integer>> set = sorted.entrySet();
+List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(set);
+Collections.sort( list, new Comparator<Map.Entry<String, Integer>>()
+{
+@Override
+  public int compare( Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2 )
+  {
+    int result = (o2.getValue()).compareTo( o1.getValue() );
+    if (result != 0) {
+      return result;
+    } else {
+      return o1.getKey().compareTo(o2.getKey());
+    }
+  }
+} );
+
+for (Map.Entry<String, Integer> listval : list) {
+                sorted1.put(listval.getKey(), listval.getValue());
+            }
+			
 
            /* List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(sorted.entrySet());
 
@@ -112,9 +128,9 @@ public class Anagram {
                 sorted1.put(listval.getKey(), listval.getValue());
             }*/
 
-            if (sortedMap.size() > 1) {
+            if (sorted1.size() > 1) {
 
-                sortedtext.set(sortedMap.toString());
+                sortedtext.set(sorted1.toString());
                 context.write(key, sortedtext);
 
             }
