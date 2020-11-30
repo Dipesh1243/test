@@ -156,11 +156,10 @@ public class Anagram {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]+ "/firstoutput"));
+		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
-        int val = job.waitForCompletion(true) ? 0 : 1;
-
-        if (val == 0) {
+        
 
             Configuration conf2 = new Configuration();
             Job job2 = Job.getInstance(conf2, "sort alphabetically");
@@ -174,7 +173,7 @@ public class Anagram {
             FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/secondoutput"));
             System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
-        }
+        
 
 
     }
